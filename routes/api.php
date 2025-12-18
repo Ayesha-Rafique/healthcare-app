@@ -20,17 +20,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//1: create patient api POST
-Route::post('/patients', [PatientController::class, 'store']);
+Route::prefix('patients')->group(function () {
+    Route::get('/', [PatientController::class, 'index']);          
+    Route::post('/', [PatientController::class, 'store']);        
+    Route::get('/{id}', [PatientController::class, 'show']);     
+});
 
-//2: create appointment api POST
-Route::post('/appointments', [AppointmentController::class, 'store']);
-
-//3: get appointments api GET
-Route::get('/appointments', [AppointmentController::class, 'index']);
-
-//4: update appointment status api PATCH
-Route::patch('/appointments/{id}/status', [AppointmentController::class, 'updateStatus']);
-
-//5: delete appointment api DELETE
-Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
+// Appointment Routes
+Route::prefix('appointments')->group(function () {
+    Route::get('/', [AppointmentController::class, 'index']);                    
+    Route::post('/', [AppointmentController::class, 'store']);                 
+    Route::patch('/{id}/status', [AppointmentController::class, 'updateStatus']); 
+    Route::delete('/{id}', [AppointmentController::class, 'destroy']);           
+});
